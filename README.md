@@ -1037,11 +1037,3 @@ This DPI engine demonstrates:
 5. **Producer-Consumer Pattern** - Thread-safe queues
 
 The key insight is that even HTTPS traffic leaks the destination domain in the TLS handshake, allowing network operators to identify and control application usage.
-
----
-
-## Questions?
-
-If you have questions about any part of this project, the code follows the same flow described in this document. Start with the simple version (`dpi/dpi_simple.py`) to understand the concepts, then move to the multi-threaded version (`dpi/dpi_engine.py`) to see how parallelism is added.
-
-Happy learning! 🚀
