@@ -1,0 +1,5 @@
+# DPI Engine — Python 3.9+
+# Core engine uses only the standard library.
+
+# Web UI (optional)
+flask>=3.0.0

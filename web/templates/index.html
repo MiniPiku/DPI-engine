@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DPI Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">◈</span>
+      <div>
+        <h1>DPI Engine</h1>
+        <p>Deep Packet Inspection Console</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel panel-config">
+      <h2>Configuration</h2>
+
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept=".pcap,.cap" hidden />
+        <div class="dropzone-inner">
+          <span class="dropzone-icon">⬆</span>
+          <p class="dropzone-title">Drop PCAP file here</p>
+          <p class="dropzone-hint">or click to browse · max 64 MB</p>
+          <p class="dropzone-file" id="fileName">No file selected</p>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" id="btnSample">Use sample PCAP</button>
+      </div>
+
+      <div class="field">
+        <label>Engine mode</label>
+        <div class="mode-toggle">
+          <button type="button" class="mode-btn active" data-mode="multithreaded">Multi-threaded</button>
+          <button type="button" class="mode-btn" data-mode="simple">Simple</button>
+        </div>
+      </div>
+
+      <div class="field thread-fields" id="threadFields">
+        <label>Threads</label>
+        <div class="thread-sliders">
+          <div>
+            <span>Load balancers <strong id="lbsVal">2</strong></span>
+            <input type="range" id="lbs" min="1" max="8" value="2" />
+          </div>
+          <div>
+            <span>Fast paths / LB <strong id="fpsVal">2</strong></span>
+            <input type="range" id="fps" min="1" max="8" value="2" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Block applications</label>
+        <div class="chip-grid" id="appChips"></div>
+      </div>
+
+      <div class="field">
+        <label>Block source IPs</label>
+        <div class="tag-input">
+          <input type="text" id="ipInput" placeholder="192.168.1.50" />
+          <button type="button" class="btn btn-sm" id="btnAddIp">Add</button>
+        </div>
+        <div class="tags" id="ipTags"></div>
+      </div>
+
+      <div class="field">
+        <label>Block domains (substring)</label>
+        <div class="tag-input">
+          <input type="text" id="domainInput" placeholder="youtube, facebook" />
+          <button type="button" class="btn btn-sm" id="btnAddDomain">Add</button>
+        </div>
+        <div class="tags" id="domainTags"></div>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-run" id="btnRun" disabled>
+        <span class="btn-label">Analyze traffic</span>
+        <span class="spinner hidden" id="spinner"></span>
+      </button>
+    </section>
+
+    <section class="panel panel-results" id="resultsPanel">
+      <h2>Results</h2>
+      <div class="empty-state" id="emptyState">
+        <p>Upload a PCAP and run analysis to see traffic breakdown, detected domains, and filtered output.</p>
+      </div>
+
+      <div class="results hidden" id="results">
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="card">
+          <h3>Application breakdown</h3>
+          <div class="bar-chart" id="appChart"></div>
+        </div>
+
+        <div class="card" id="threadCard">
+          <h3>Thread statistics</h3>
+          <div class="thread-grid" id="threadGrid"></div>
+        </div>
+
+        <div class="card">
+          <h3>Detected domains / SNI</h3>
+          <div class="table-wrap">
+            <table class="sni-table">
+              <thead>
+                <tr><th>Domain</th><th>Application</th></tr>
+              </thead>
+              <tbody id="sniBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <a class="btn btn-primary btn-download hidden" id="btnDownload" href="#" download>
+          Download filtered PCAP
+        </a>
+      </div>
+
+      <div class="error-banner hidden" id="errorBanner"></div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
